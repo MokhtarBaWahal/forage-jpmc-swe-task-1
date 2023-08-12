@@ -1,63 +1,92 @@
-From cc280e0c9f975bc66598333652fe5dc1365b02d3 Mon Sep 17 00:00:00 2001
+From f7d03fd997191826ca202e497f7c32275e3f64c7 Mon Sep 17 00:00:00 2001
 From: Mokhtar Salem <70936834+MokhtarBaWahal@users.noreply.github.com>
-Date: Sun, 13 Aug 2023 00:29:38 +0300
+Date: Sun, 13 Aug 2023 00:36:04 +0300
 Subject: [PATCH] task is done
 
 ---
- .idea/forage-jpmc-swe-task-1.iml |  4 +++-
- client3.py                       | 10 +++++++---
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ 0001-task-is-done.patch | 63 +++++++++++++++++++++++++++++++++++++++++
+ client3.py              |  1 +
+ 2 files changed, 64 insertions(+)
+ create mode 100644 0001-task-is-done.patch
 
-diff --git a/.idea/forage-jpmc-swe-task-1.iml b/.idea/forage-jpmc-swe-task-1.iml
-index 8b8c395..8e5446a 100644
---- a/.idea/forage-jpmc-swe-task-1.iml
-+++ b/.idea/forage-jpmc-swe-task-1.iml
-@@ -1,7 +1,9 @@
- <?xml version="1.0" encoding="UTF-8"?>
- <module type="PYTHON_MODULE" version="4">
-   <component name="NewModuleRootManager">
--    <content url="file://$MODULE_DIR$" />
-+    <content url="file://$MODULE_DIR$">
-+      <excludeFolder url="file://$MODULE_DIR$/venv" />
-+    </content>
-     <orderEntry type="inheritedJdk" />
-     <orderEntry type="sourceFolder" forTests="false" />
-   </component>
+diff --git a/0001-task-is-done.patch b/0001-task-is-done.patch
+new file mode 100644
+index 0000000..1d47d16
+--- /dev/null
++++ b/0001-task-is-done.patch
+@@ -0,0 +1,63 @@
++From cc280e0c9f975bc66598333652fe5dc1365b02d3 Mon Sep 17 00:00:00 2001
++From: Mokhtar Salem <70936834+MokhtarBaWahal@users.noreply.github.com>
++Date: Sun, 13 Aug 2023 00:29:38 +0300
++Subject: [PATCH] task is done
++
++---
++ .idea/forage-jpmc-swe-task-1.iml |  4 +++-
++ client3.py                       | 10 +++++++---
++ 2 files changed, 10 insertions(+), 4 deletions(-)
++
++diff --git a/.idea/forage-jpmc-swe-task-1.iml b/.idea/forage-jpmc-swe-task-1.iml
++index 8b8c395..8e5446a 100644
++--- a/.idea/forage-jpmc-swe-task-1.iml
+++++ b/.idea/forage-jpmc-swe-task-1.iml
++@@ -1,7 +1,9 @@
++ <?xml version="1.0" encoding="UTF-8"?>
++ <module type="PYTHON_MODULE" version="4">
++   <component name="NewModuleRootManager">
++-    <content url="file://$MODULE_DIR$" />
+++    <content url="file://$MODULE_DIR$">
+++      <excludeFolder url="file://$MODULE_DIR$/venv" />
+++    </content>
++     <orderEntry type="inheritedJdk" />
++     <orderEntry type="sourceFolder" forTests="false" />
++   </component>
++diff --git a/client3.py b/client3.py
++index 3fc09b7..ad08dcb 100644
++--- a/client3.py
+++++ b/client3.py
++@@ -35,14 +35,17 @@ def getDataPoint(quote):
++     stock = quote['stock']
++     bid_price = float(quote['top_bid']['price'])
++     ask_price = float(quote['top_ask']['price'])
++-    price = bid_price
+++    price = float((bid_price + ask_price) / 2)
++     return stock, bid_price, ask_price, price
++ 
++ 
++ def getRatio(price_a, price_b):
++     """ Get ratio of price_a and price_b """
++     """ ------------- Update this function ------------- """
++-    return 1
+++    if price_b == 0:
+++        return
+++    else:
+++        return price_a/price_b
++ 
++ 
++ # Main
++@@ -52,8 +55,9 @@ if __name__ == "__main__":
++         quotes = json.loads(urllib.request.urlopen(QUERY.format(random.random())).read())
++ 
++         """ ----------- Update to get the ratio --------------- """
+++        prices ={}
++         for quote in quotes:
++             stock, bid_price, ask_price, price = getDataPoint(quote)
+++            prices[stock] = price
++             print("Quoted %s at (bid:%s, ask:%s, price:%s)" % (stock, bid_price, ask_price, price))
++ 
++-        print("Ratio %s" % getRatio(price, price))
++-- 
++2.36.1.windows.1
++
 diff --git a/client3.py b/client3.py
-index 3fc09b7..ad08dcb 100644
+index ad08dcb..5fa99d9 100644
 --- a/client3.py
 +++ b/client3.py
-@@ -35,14 +35,17 @@ def getDataPoint(quote):
-     stock = quote['stock']
-     bid_price = float(quote['top_bid']['price'])
-     ask_price = float(quote['top_ask']['price'])
--    price = bid_price
-+    price = float((bid_price + ask_price) / 2)
-     return stock, bid_price, ask_price, price
- 
- 
- def getRatio(price_a, price_b):
-     """ Get ratio of price_a and price_b """
-     """ ------------- Update this function ------------- """
--    return 1
-+    if price_b == 0:
-+        return
-+    else:
-+        return price_a/price_b
- 
- 
- # Main
-@@ -52,8 +55,9 @@ if __name__ == "__main__":
-         quotes = json.loads(urllib.request.urlopen(QUERY.format(random.random())).read())
- 
-         """ ----------- Update to get the ratio --------------- """
-+        prices ={}
-         for quote in quotes:
-             stock, bid_price, ask_price, price = getDataPoint(quote)
-+            prices[stock] = price
+@@ -61,3 +61,4 @@ if __name__ == "__main__":
+             prices[stock] = price
              print("Quoted %s at (bid:%s, ask:%s, price:%s)" % (stock, bid_price, ask_price, price))
  
--        print("Ratio %s" % getRatio(price, price))
++        print("Ratio %s" % getRatio(prices["ABC"], prices["DEF"]))
 -- 
 2.36.1.windows.1
 
